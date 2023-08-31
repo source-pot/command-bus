@@ -10,24 +10,37 @@ class CommandBus
 {
     public function handle(Command $command): void
     {
-        // Infer a handler class by appending "handler" to the command class name
-        $handler = $this->getHandlerClassName($command::class);
+        $handlerClassName = $this->getHandlerClassName($command::class);
 
-        if(! class_exists($handler)) {
+        $handler = $this->instantiateHandlerClass($handlerClassName);
+
+        $handler->handle($command);
+    }
+
+    /**
+     * Infers a handler class by appending "handler" to the command class name
+     */
+    private function getHandlerClassName(string $commandClassName): string
+    {
+        return $commandClassName . 'Handler';
+    }
+
+    /**
+     * @throws InvalidArgumentException If the handler class doesn't exist, or is not a CommandHandler
+     */
+    private function instantiateHandlerClass(string $className): CommandHandler
+    {
+        if(! class_exists($className)) {
             throw new InvalidArgumentException('Handler class does not exist');
         }
 
-        $handler = new $handler;
+        $handler = new $className;
 
         if(! $handler instanceof CommandHandler) {
             throw new InvalidArgumentException('Handler not instance of CommandHandler');
         }
 
-        $handler->handle($command);
+        return $handler;
     }
 
-    public function getHandlerClassName(string $commandClassName): string
-    {
-        return $commandClassName . 'Handler';
-    }
 }
