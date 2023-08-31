@@ -2,11 +2,13 @@
 
 namespace App\Application\Command;
 
-use App\Framework\CommandBus\Command;
+use App\Framework\CommandBus\Contracts\Command;
 
-class ExampleCommand implements Command
+final readonly class ExampleCommand implements Command
 {
-    public function __construct(public readonly string $message)
-    {
+    public function __construct(
+        public string $message
+    ) {
+        //
     }
 }

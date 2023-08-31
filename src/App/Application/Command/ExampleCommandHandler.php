@@ -2,9 +2,9 @@
 
 namespace App\Application\Command;
 
-use App\Framework\CommandBus\CommandHandler;
+use App\Framework\CommandBus\Contracts\CommandHandler;
 
-class ExampleCommandHandler implements CommandHandler
+final class ExampleCommandHandler implements CommandHandler
 {
     public function handle(ExampleCommand $command): void
     {
